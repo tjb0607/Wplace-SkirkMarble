@@ -1364,7 +1364,7 @@ function observeOpacityButton() {
         if (mapButtonContainer) return;
 
         // Busca o container pai diretamente pela classe (não depende mais do título do botão)
-        const opacityContainer = document.querySelector('.absolute.bottom-3.left-3.z-30');
+        const opacityContainer = document.querySelector('.bottom-safe-min-3.left-safe-3.absolute.z-30');
         if (!opacityContainer) return;
 
         // Create a new container for the Map button positioned above the opacity button
