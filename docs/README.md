@@ -1,4 +1,4 @@
-quick hack to fix the missing buttons on the bottom left with the new wplace update
+quick hack to fix the missing buttons on the bottom left with the new wplace update. no promises it'll work
 
 install: https://github.com/tjb0607/Wplace-SkirkMarble/raw/refs/heads/main/dist/SkirkMarble.user.js
 
