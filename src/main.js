@@ -1287,7 +1287,7 @@ applyDragMode(dragModeEnabled);
 
 apiManager.spontaneousResponseListener(overlayMain); // Reads spontaneous fetch responces
 
-observeBlack(); // Observes the black palette color
+observePaintPanel(); // Observes the paint panel
 observeOpacityButton(); // Observes and adds the Map button above opacity button
 
 // Initialize keyboard shortcuts
@@ -1315,39 +1315,37 @@ if (!document.getElementById('bm-fullcharge-styles')) {
 
 debugLog(`%c${name}%c (${version}) userscript has loaded!`, 'color: cornflowerblue;', '');
 
-/** Observe the black color, and add the "Move" button.
+/** Observe the paint panel, and add the "Move" button.
  * @since 0.66.3
  */
-function observeBlack() {
+function observePaintPanel() {
   const observer = new MutationObserver((mutations, observer) => {
+    const floatingPanel = document.querySelector('.game-floating-panel');
+    if (!floatingPanel) {return;}
 
-    const black = document.querySelector('#color-1'); // Attempt to retrieve the black color element for anchoring
-
-    if (!black) {return;} // Black color does not exist yet. Kills iteself
-
-    let move = document.querySelector('#bm-button-move'); // Tries to find the move button
-
+    let move = floatingPanel.querySelector('#bm-button-move'); // Tries to find the move button
     // If the move button does not exist, we make a new one
     if (!move) {
       move = document.createElement('button');
       move.id = 'bm-button-move';
-      move.textContent = 'Move ↑';
+      move.textContent = '↑';
       move.className = 'btn btn-soft';
       move.onclick = function() {
-        const roundedBox = this.parentNode.parentNode.parentNode.parentNode; // Obtains the rounded box
-        const shouldMoveUp = (this.textContent == 'Move ↑');
-        roundedBox.parentNode.className = roundedBox.parentNode.className.replace(shouldMoveUp ? 'bottom' : 'top', shouldMoveUp ? 'top' : 'bottom'); // Moves the rounded box to the top
-        roundedBox.style.borderTopLeftRadius = shouldMoveUp ? '0px' : 'var(--radius-box)';
-        roundedBox.style.borderTopRightRadius = shouldMoveUp ? '0px' : 'var(--radius-box)';
-        roundedBox.style.borderBottomLeftRadius = shouldMoveUp ? 'var(--radius-box)' : '0px';
-        roundedBox.style.borderBottomRightRadius = shouldMoveUp ? 'var(--radius-box)' : '0px';
-        this.textContent = shouldMoveUp ? 'Move ↓' : 'Move ↑';
+        const shouldMoveUp = (this.textContent == '↑');
+        if (shouldMoveUp) {
+          floatingPanel.style.top = 'calc(env(safe-area-inset-top, 0px) + 18px)'
+          floatingPanel.style.bottom = 'auto';
+        } else {
+          // restore defaults
+          floatingPanel.style.top = '';
+          floatingPanel.style.bottom = '';
+        }
+        this.textContent = shouldMoveUp ? '↓' : '↑';
       }
 
-      // Attempts to find the "Paint Pixel" element for anchoring
-      const paintPixel = black.parentNode.parentNode.parentNode.parentNode.querySelector('h2');
-
-      paintPixel.parentNode?.appendChild(move); // Adds the move button
+      // Attempts to find the "Paint pixel" element for anchoring
+      const layoutSummary = floatingPanel.querySelector('.paint-layout-summary')
+      layoutSummary.appendChild(move); // Adds the move button
     }
   });
 
